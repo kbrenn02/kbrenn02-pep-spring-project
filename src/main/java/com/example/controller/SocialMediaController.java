@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -8,15 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 import com.example.entity.Account;
 import com.example.entity.Message;
-import com.example.repository.AccountRepository;
-import com.example.repository.MessageRepository;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -26,12 +24,12 @@ import com.example.repository.MessageRepository;
  */
 @RestController
 public class SocialMediaController {
-    // private final MessageService messageService;
+    private final MessageService messageService;
     private final AccountService accountService;
 
     @Autowired
     public SocialMediaController(MessageService messageService, AccountService accountService){
-        // this.messageService = messageService;
+        this.messageService = messageService;
         this.accountService = accountService;
     }
 
@@ -44,7 +42,7 @@ public class SocialMediaController {
         Account registeredAccount = accountService.registerUser(acct);
         
         if(registeredAccount == null){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(registeredAccount);
         }
@@ -56,7 +54,23 @@ public class SocialMediaController {
         if(loggedInAccount == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(loggedInAccount);
+            return ResponseEntity.status(HttpStatus.OK).body(loggedInAccount);
         }
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<Message> postMessage(@RequestBody Message msg){
+        Message postedMsg = messageService.postMessage(msg);
+        if(postedMsg == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(postedMsg);
+        }
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getMessages(){
+        List<Message> msgs = messageService.getAllMessages();
+        return ResponseEntity.status(HttpStatus.OK).body(msgs);
     }
 }

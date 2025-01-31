@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
 
-@Service
+@Service 
 public class AccountService {
     private final AccountRepository accountRepository;
 
