@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,11 @@ public class MessageService {
     // Get all messages
     public List<Message> getAllMessages(){
         return messageRepository.findAll();
+    }
+
+    // Get message by Id
+    public Message getMessageById(int id){
+        return messageRepository.findMessageByMessageId(id);
     }
 
 }
