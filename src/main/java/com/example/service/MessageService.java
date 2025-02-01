@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+// import org.springframework.transaction.annotation.Transactional;
 
 import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
@@ -27,7 +28,7 @@ public class MessageService {
     // Create new message
     public Message postMessage(Message message){
         if(message.getMessageText().length() <= 255 && !message.getMessageText().isEmpty()){
-            Account existingUser = accountRepository.findAccountByAccountId(message.getPostedBy());
+            Account existingUser = accountRepository.findById(message.getPostedBy()).orElse(null);
             if(existingUser != null){
                 return messageRepository.save(message);
             }
@@ -43,7 +44,17 @@ public class MessageService {
 
     // Get message by Id
     public Message getMessageById(int id){
-        return messageRepository.findMessageByMessageId(id);
+        return messageRepository.findById(id).orElse(null);
+    }
+
+    // Delete message by Id
+    public int deleteMessageById(int id){
+        Optional<Message> messageToBeDeleted = messageRepository.findById(id);
+        if( messageToBeDeleted.isPresent()){
+            messageRepository.deleteById(id);
+            return 1;
+        }
+        return 0;
     }
 
 }
