@@ -70,14 +70,15 @@ public class MessageService {
             return 0;
         }
         return 0;
+    }
 
-
-
-        // - The update of a message should be successful if and only if the message id already 
-        // exists and the new messageText is not blank and is not over 255 characters. If the update 
-        // is successful, the response body should contain the number of rows updated (1), and the response 
-        // status should be 200, which is the default. The message existing on the database should have the updated messageText.
-        // - If the update of the message is not successful for any reason, the response status should be 400. (Client error)
+    // Get all messages by a user
+    public List<Message> getAllMessagesByAccountId(int id){
+        Optional<Account> targetAccount = accountRepository.findById(id);
+        if(targetAccount.isPresent()){
+            return messageRepository.findAllMessagesByPostedBy(id);
+        }
+        return null;
     }
 
 }

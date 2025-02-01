@@ -105,4 +105,10 @@ public class SocialMediaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/accounts/{accountId}/messages")
+    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable int accountId){
+        List<Message> msgs = messageService.getAllMessagesByAccountId(accountId);
+        return ResponseEntity.status(HttpStatus.OK).body(msgs);
+    }
 }
