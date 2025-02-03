@@ -3,7 +3,6 @@ package com.example.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +35,7 @@ public class SocialMediaController {
         this.accountService = accountService;
     }
 
+    // Register a new users
     @PostMapping("/register")
     public ResponseEntity<Account> registerAccount(@RequestBody Account acct){
         if(accountService.checkUser(acct) != null){
@@ -51,6 +51,7 @@ public class SocialMediaController {
         }
     }
 
+    // Login an existing user
     @PostMapping("/login")
     public ResponseEntity<Account> loginAccount(@RequestBody Account acct){
         Account loggedInAccount = accountService.loginUser(acct);
@@ -61,6 +62,7 @@ public class SocialMediaController {
         }
     }
 
+    // Create a new message
     @PostMapping("/messages")
     public ResponseEntity<Message> postMessage(@RequestBody Message msg){
         Message postedMsg = messageService.postMessage(msg);
@@ -71,12 +73,14 @@ public class SocialMediaController {
         }
     }
 
+    // Get a list of all the messages
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getMessages(){
         List<Message> msgs = messageService.getAllMessages();
         return ResponseEntity.status(HttpStatus.OK).body(msgs);
     }
 
+    // Get a specific message by its ID
     @GetMapping("/messages/{messageId}")
     public ResponseEntity<Message> getMessageById(@PathVariable int messageId){
         Message msg = messageService.getMessageById(messageId);
@@ -86,6 +90,7 @@ public class SocialMediaController {
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
+    // Detele a specific message by its ID
     @DeleteMapping("/messages/{messageId}")
     public ResponseEntity<Integer> deleteMessageById(@PathVariable int messageId){
         int numRowsUpdated = messageService.deleteMessageById(messageId);
@@ -96,6 +101,7 @@ public class SocialMediaController {
         }
     }
 
+    // Update message text by its ID
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Integer> updateMessageById(@PathVariable int messageId, @RequestBody Message msg){
         int numRowsUpdated = messageService.updateMessageById(messageId, msg);
@@ -106,6 +112,7 @@ public class SocialMediaController {
         }
     }
 
+    // Get a list of all messages for a specific user
     @GetMapping("/accounts/{accountId}/messages")
     public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable int accountId){
         List<Message> msgs = messageService.getAllMessagesByAccountId(accountId);
